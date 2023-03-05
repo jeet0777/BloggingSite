@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -56,11 +57,7 @@ public class UserServiceImpl implements UserService {
         if (users == null) {
             throw new UserNotFoundException();
         }
-
-        List<UserDto> userDtos = new ArrayList<>();
-        for (User user : users) {
-            userDtos.add(UserConvertor.toUserDto(user));
-        }
+        List<UserDto> userDtos = users.stream().map(U->UserConvertor.toUserDto(U)).collect(Collectors.toList());
         logger.info("Users fetched : " + userDtos);
         return userDtos;
     }

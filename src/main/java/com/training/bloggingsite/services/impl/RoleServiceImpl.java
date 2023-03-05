@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RoleServiceImpl implements RoleService {
@@ -44,10 +45,7 @@ public class RoleServiceImpl implements RoleService {
         if (roles == null) {
             throw new RoleNotFoundException();
         }
-        List<RoleDto> roleDtos = new ArrayList<>();
-        for (Role role : roles) {
-            roleDtos.add(RoleConvertor.toRoleDto(role));
-        }
+        List<RoleDto> roleDtos = roles.stream().map(R->RoleConvertor.toRoleDto(R)).collect(Collectors.toList());
         logger.info("Roles Fetched :" + roleDtos);
         return roleDtos;
     }

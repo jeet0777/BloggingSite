@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -70,10 +71,8 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<PostDto> findAllPostByUser(User user) {
 
-        List<PostDto> postDtos = new ArrayList<>();
         List<Post> postByUserId = postRepository.findPostByUser(user);
-        for (Post post : postByUserId)
-            postDtos.add(PostConvertor.toPostDto(post));
+        List<PostDto> postDtos= postByUserId.stream().map(P-> PostConvertor.toPostDto(P)).collect(Collectors.toList());
         return postDtos;
     }
 
@@ -93,22 +92,16 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<PostDto> findPaginatedVerifiedPost(int pageNo, int pageSize) {
         Pageable pageable=PageRequest.of(pageNo-1,pageSize, Sort.by("title"));
-        List<PostDto> postDtos=new ArrayList<>();
         List<Post> posts=postRepository.findPostsByIsVerifiedTrue(pageable);
-                for(Post post: posts) {
-                    postDtos.add(PostConvertor.toPostDto(post));
-                }
-                return postDtos;
+        List<PostDto> postDtos= posts.stream().map(P-> PostConvertor.toPostDto(P)).collect(Collectors.toList());
+        return postDtos;
     }
 
     @Override
     public List<PostDto> findPaginatedPosts(int pageNo, int pageSize) {
         Pageable pageable=PageRequest.of(pageNo-1,pageSize, Sort.by("title"));
-        List<PostDto> postDtos=new ArrayList<>();
         List<Post> posts=postRepository.findAll(pageable).getContent();
-        for(Post post: posts) {
-            postDtos.add(PostConvertor.toPostDto(post));
-        }
+        List<PostDto> postDtos= posts.stream().map(P-> PostConvertor.toPostDto(P)).collect(Collectors.toList());
         return postDtos;
     }
 

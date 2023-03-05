@@ -67,12 +67,7 @@ public class BookmarkServiceImpl implements BookmarkService {
     public boolean isBookMarked(UserDto userDto, long postId) {
         boolean isBookMarked = false;
         List<PostDto> bookMarkedPostsList = getAllBookMarkedPost(userDto);
-        for (PostDto bookmarkpost : bookMarkedPostsList) {
-            if (bookmarkpost.getId() == postId) {
-                isBookMarked = true;
-                break;
-            }
-        }
+        isBookMarked = bookMarkedPostsList.stream().anyMatch(B->B.getId()==postId);
         logger.info("Bookmarked Check : "+isBookMarked+" for postId :"+postId+" user :"+userDto);
         return isBookMarked;
     }

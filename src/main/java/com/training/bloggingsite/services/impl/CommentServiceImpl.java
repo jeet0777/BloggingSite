@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -59,20 +60,14 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<CommentDto> findCommentByPostVerified(long postId) {
         List<Comment> comments = this.commentRepository.findByPostIdAndIsVerifiedTrue(postId);
-        List<CommentDto> commentDtos = new ArrayList<>();
-        for(Comment comment : comments){
-            commentDtos.add(CommentConverter.toCommentDto(comment));
-        }
+        List<CommentDto> commentDtos = comments.stream().map(C->CommentConverter.toCommentDto(C)).collect(Collectors.toList());
         return commentDtos;
     }
 
     @Override
     public List<CommentDto> findAllPostById(long postId) {
         List<Comment> comments = this.commentRepository.findAllByPostId(postId);
-        List<CommentDto> commentDtos = new ArrayList<>();
-        for(Comment comment : comments){
-            commentDtos.add(CommentConverter.toCommentDto(comment));
-        }
+        List<CommentDto> commentDtos = comments.stream().map(C->CommentConverter.toCommentDto(C)).collect(Collectors.toList());
         return commentDtos;
     }
 

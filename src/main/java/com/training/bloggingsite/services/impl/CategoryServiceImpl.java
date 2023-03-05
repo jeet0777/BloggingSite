@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -51,10 +52,7 @@ public class CategoryServiceImpl implements CategoryService {
         if(categories==null){
             throw new CategoryNotFoundException();
         }
-        List<CategoryDto> categoryDtos = new ArrayList<>();
-        for(Category category : categories){
-            categoryDtos.add(CategoryConvertor.toCategoryDto(category));
-        }
+        List<CategoryDto> categoryDtos =categories.stream().map(C->CategoryConvertor.toCategoryDto(C)).collect(Collectors.toList());
         logger.info("Category fetched :" + categoryDtos);
         return categoryDtos;
     }
@@ -92,10 +90,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<CategoryDto> findCategoryByParent(CategoryDto categoryDto) {
         List<Category> categories = this.categoryRepositories.findCategoriesByParentCategoryId(categoryDto.getId());
-        List<CategoryDto> categoryDtos = new ArrayList<>();
-        for (Category category : categories){
-            categoryDtos.add(CategoryConvertor.toCategoryDto(category));
-        }
+        List<CategoryDto> categoryDtos =categories.stream().map(C->CategoryConvertor.toCategoryDto(C)).collect(Collectors.toList());
         logger.info("Category fetched as parent :" + categoryDtos);
         return categoryDtos;
     }
@@ -103,10 +98,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<CategoryDto> findAllCategoryIncludeChildren() {
         List<Category> categories = this.categoryRepositories.findAll();
-        List<CategoryDto> categoryDtos = new ArrayList<>();
-        for (Category category : categories){
-            categoryDtos.add(CategoryConvertor.toCategoryDto(category));
-        }
+        List<CategoryDto> categoryDtos =categories.stream().map(C->CategoryConvertor.toCategoryDto(C)).collect(Collectors.toList());
         logger.info("Category fetched as all :" + categoryDtos);
         return categoryDtos;
     }
